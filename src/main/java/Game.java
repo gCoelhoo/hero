@@ -11,8 +11,7 @@ import java.io.IOException;
 
 public class Game {
     private Screen screen;
-    private int x = 10;
-    private int y = 10;
+    private Hero hero;
     private boolean gameCycleState;
 
     public Game(){
@@ -21,12 +20,15 @@ public class Game {
             DefaultTerminalFactory terminalFactory = new DefaultTerminalFactory()
                     .setInitialTerminalSize(terminalSize);
             Terminal terminal = terminalFactory.createTerminal();
-            screen = new TerminalScreen(terminal);
 
+            screen = new TerminalScreen(terminal);
             screen.setCursorPosition(null);
             screen.startScreen();
             screen.doResizeIfNecessary();
+
             gameCycleState = true;
+
+            hero = new Hero(10, 10);
         } catch(IOException e){
             e.printStackTrace();
         }
@@ -35,16 +37,16 @@ public class Game {
     private void processKey(KeyStroke key) throws IOException{
         System.out.println(key);
         if(key.getKeyType() == KeyType.ArrowLeft){
-            x -= 1;
+            hero.moveLeft();
         }
         if(key.getKeyType() == KeyType.ArrowRight){
-            x += 1;
+            hero.moveRight();
         }
         if(key.getKeyType() == KeyType.ArrowUp){
-            y -= 1;
+            hero.moveUp();
         }
         if(key.getKeyType() == KeyType.ArrowDown){
-            y += 1;
+            hero.moveDown();
         }
 
         if(key.getKeyType() == KeyType.Character && key.getCharacter() == 'q'){
@@ -57,7 +59,7 @@ public class Game {
 
     private void draw() throws IOException{
         screen.clear();
-        screen.setCharacter(x, y, TextCharacter.fromCharacter('X')[0]);
+        hero.draw(screen);
         screen.refresh();
     }
 
