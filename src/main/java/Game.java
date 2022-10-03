@@ -1,7 +1,5 @@
 import com.googlecode.lanterna.TerminalSize;
-import com.googlecode.lanterna.TextCharacter;
 import com.googlecode.lanterna.input.KeyStroke;
-import com.googlecode.lanterna.input.KeyType;
 import com.googlecode.lanterna.screen.Screen;
 import com.googlecode.lanterna.screen.TerminalScreen;
 import com.googlecode.lanterna.terminal.DefaultTerminalFactory;
@@ -11,8 +9,7 @@ import java.io.IOException;
 
 public class Game {
     private Screen screen;
-    private Hero hero;
-    private boolean gameCycleState;
+    private Arena arena;
 
     public Game(){
         try {
@@ -26,44 +23,32 @@ public class Game {
             screen.startScreen();
             screen.doResizeIfNecessary();
 
-            gameCycleState = true;
-
-            hero = new Hero(10, 10);
+            arena = new Arena(40, 20);
         } catch(IOException e){
             e.printStackTrace();
         }
     }
 
-    private void moveHero(Position position){
-        hero.setPosition(position);
-    }
-
-    private void processKey(KeyStroke key) throws IOException{
-        System.out.println(key);
-        if(key.getKeyType() == KeyType.ArrowLeft) moveHero(hero.moveLeft());
-        if(key.getKeyType() == KeyType.ArrowRight) moveHero(hero.moveRight());
-        if(key.getKeyType() == KeyType.ArrowUp) moveHero(hero.moveUp());
-        if(key.getKeyType() == KeyType.ArrowDown) moveHero(hero.moveDown());
-
-        if(key.getKeyType() == KeyType.Character && key.getCharacter() == 'q'){
-            screen.close();
-        }
-        if(key.getKeyType() == KeyType.EOF){
-            gameCycleState = false;
-        }
+    private void processKey(KeyStroke key){
+        arena.processKey(key);
     }
 
     private void draw() throws IOException{
         screen.clear();
-        hero.draw(screen);
+        arena.draw(screen);
         screen.refresh();
     }
 
     public void run() throws IOException {
-        while(gameCycleState){
+        while(true){
             draw();
             KeyStroke key = screen.readInput();
             processKey(key);
+
+            if(!arena.gameCycleState) {
+                screen.close();
+                break;
+            }
         }
     }
 }
