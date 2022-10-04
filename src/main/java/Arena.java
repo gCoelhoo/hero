@@ -13,7 +13,9 @@ public class Arena {
     private int height;
     private Hero hero;
     private List<Wall> walls;
+
     public boolean gameCycleState;
+    private boolean canMove;
 
     public Arena(int width, int height){
         this.width = width;
@@ -32,11 +34,13 @@ public class Arena {
     }
 
     private boolean canHeroMove(Position position){
-        if(position.getX() > 0 && position.getX() < width-1
-        && position.getY() > 0 && position.getY() < height-1)
-            return true;
+        canMove = true;
 
-        return false;
+        for(Wall wall : walls) {
+            if(wall.getPosition().equals(position))
+                return false;
+        }
+        return canMove;
     }
 
     public void processKey(KeyStroke key){
