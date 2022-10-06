@@ -15,6 +15,7 @@ public class Arena {
     private Hero hero;
     private List<Wall> walls;
     private List<Coin> coins;
+    private List<Monster> monsters;
 
     public boolean gameCycleState;
     private boolean canMove;
@@ -28,13 +29,21 @@ public class Arena {
 
         hero = new Hero(10, 10);
 
+        this.monsters = createMonsters();
+
         gameCycleState = true;
     }
 
     private void moveHero(Position position){
         retrieveCoins();
+        verifyMonsterCollisions();
         if(canHeroMove(position))
             hero.setPosition(position);
+    }
+
+    private void moveMonsters(){
+        for(Monster monster : monsters)
+            monster.setPosition(monster.move());
     }
 
     private boolean canHeroMove(Position position){
@@ -48,11 +57,12 @@ public class Arena {
     }
 
     public void processKey(KeyStroke key){
-        System.out.println(key);
         if(key.getKeyType() == KeyType.ArrowLeft) moveHero(hero.moveLeft());
         if(key.getKeyType() == KeyType.ArrowRight) moveHero(hero.moveRight());
         if(key.getKeyType() == KeyType.ArrowUp) moveHero(hero.moveUp());
         if(key.getKeyType() == KeyType.ArrowDown) moveHero(hero.moveDown());
+
+        moveMonsters();
 
         if(key.getKeyType() == KeyType.Character && key.getCharacter() == 'q'){
             gameCycleState = false;
@@ -73,6 +83,18 @@ public class Arena {
 
         for(Coin coin : coins)
             coin.draw(graphics);
+
+        for(Monster monster : monsters)
+            monster.draw(graphics);
+    }
+
+    private List<Monster> createMonsters(){
+        Random random = new Random();
+        ArrayList<Monster> monsters = new ArrayList<>();
+        for(int i = 0; i < 3; ++i){
+            monsters.add(new Monster(random.nextInt(width-2)+1, random.nextInt(height-2)+1));
+        }
+        return monsters;
     }
 
     private void retrieveCoins(){
@@ -102,5 +124,14 @@ public class Arena {
         }
 
         return walls;
+    }
+
+    private void verifyMonsterCollisions(){
+        for(Monster monster : monsters){
+            if(monster.getPosition().equals(hero.getPosition())) {
+                System.out.println("You Died");
+                gameCycleState = false;
+            }
+        }
     }
 }
