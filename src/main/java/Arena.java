@@ -7,12 +7,14 @@ import com.googlecode.lanterna.input.KeyType;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 public class Arena {
     private int width;
     private int height;
     private Hero hero;
     private List<Wall> walls;
+    private List<Coin> coins;
 
     public boolean gameCycleState;
     private boolean canMove;
@@ -22,6 +24,7 @@ public class Arena {
         this.height = height;
 
         this.walls = createWalls();
+        this.coins = createCoins();
 
         hero = new Hero(10, 10);
 
@@ -29,6 +32,7 @@ public class Arena {
     }
 
     private void moveHero(Position position){
+        retrieveCoins();
         if(canHeroMove(position))
             hero.setPosition(position);
     }
@@ -59,13 +63,29 @@ public class Arena {
     }
 
     public void draw(TextGraphics graphics){
-        graphics.setBackgroundColor(TextColor.Factory.fromString("#8A2BE2"));
+        graphics.setBackgroundColor(TextColor.Factory.fromString("#A9A9A9"));
         graphics.fillRectangle(new TerminalPosition(0, 0), new TerminalSize(width, height),  ' ');
 
         for(Wall wall : walls)
             wall.draw(graphics);
 
         hero.draw(graphics);
+
+        for(Coin coin : coins)
+            coin.draw(graphics);
+    }
+
+    private void retrieveCoins(){
+        coins.removeIf(coin -> coin.getPosition().equals(hero.getPosition()));
+    }
+
+    private List<Coin> createCoins(){
+        Random random = new Random();
+        ArrayList<Coin> coins = new ArrayList<>();
+        for(int i = 0; i < 5; ++i){
+            coins.add(new Coin(random.nextInt(width-2)+1, random.nextInt(height-2)+1));
+        }
+        return coins;
     }
 
     private List<Wall> createWalls(){
