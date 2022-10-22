@@ -1,3 +1,5 @@
+package com.gcoelhoo.hero;
+
 import com.googlecode.lanterna.graphics.TextGraphics;
 
 abstract class Element {

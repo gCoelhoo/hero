@@ -1,3 +1,5 @@
+package com.gcoelhoo.hero;
+
 import com.googlecode.lanterna.SGR;
 import com.googlecode.lanterna.TerminalPosition;
 import com.googlecode.lanterna.TextColor;
@@ -9,9 +11,15 @@ public class Hero extends Element{
     }
 
     public void draw(TextGraphics graphics){
-        graphics.setForegroundColor(TextColor.Factory.fromString("#FFFF33"));
-        graphics.enableModifiers(SGR.BOLD);
-        graphics.putString(new TerminalPosition(super.getPosition().getX(), super.getPosition().getY()), "X");
+        LanternaService lanternaService = new LanternaService(graphics);
+
+        lanternaService.setForegroundColor(TextColor.Factory.fromString("#FFFF33"));
+        lanternaService.enableModifiers(SGR.BOLD);
+        lanternaService.putString(new TerminalPosition(super.getPosition().getX(), super.getPosition().getY()), "X");
+
+//        graphics.setForegroundColor(TextColor.Factory.fromString("#FFFF33"));
+//        graphics.enableModifiers(SGR.BOLD);
+//        graphics.putString(new TerminalPosition(super.getPosition().getX(), super.getPosition().getY()), "X");
     }
 
     public Position moveUp(){

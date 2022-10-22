@@ -1,6 +1,8 @@
+package com.gcoelhoo.hero;
+
 public class Position {
-    private int x;
-    private int y;
+    private final int x;
+    private final int y;
 
     public Position(int x, int y){
         this.x = x;
@@ -8,11 +10,11 @@ public class Position {
     }
 
     public int getX() {
-        return x;
+        return this.x;
     }
 
     public int getY() {
-        return y;
+        return this.y;
     }
 
     @Override

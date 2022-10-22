@@ -1,3 +1,5 @@
+package com.gcoelhoo.hero;
+
 import com.googlecode.lanterna.TerminalPosition;
 import com.googlecode.lanterna.TerminalSize;
 import com.googlecode.lanterna.TextColor;
@@ -10,12 +12,12 @@ import java.util.List;
 import java.util.Random;
 
 public class Arena {
-    private int width;
-    private int height;
-    private Hero hero;
-    private List<Wall> walls;
-    private List<Coin> coins;
-    private List<Monster> monsters;
+    private final int width;
+    private final int height;
+    private final Hero hero;
+    private final List<Wall> walls;
+    private final List<Coin> coins;
+    private final List<Monster> monsters;
 
     public boolean gameCycleState;
     private boolean canMove;
